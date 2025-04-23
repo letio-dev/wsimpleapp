@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libpq-dev \
     libonig-dev \
+    libgd-dev \
     tesseract-ocr \
     && docker-php-ext-install \
         pdo \
@@ -18,6 +19,7 @@ RUN apt-get update && apt-get install -y \
         mbstring \
         zip \
         xml \
+        gd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
