@@ -1,0 +1,38 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@tailwindcss/forms": "^0.5.10",
+        "@tailwindcss/vite": "^4.0.15",
+        "autoprefixer": "^10.4.21",
+        "axios": "^1.7.4",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.2.0",
+        "postcss": "^8.5.3",
+        "tailwindcss": "^4.0.15",
+        "vite": "^6.0.11"
+    },
+    "dependencies": {
+        "@preline/datatable": "^3.0.0",
+        "datatables.net-buttons": "^3.2.2",
+        "datatables.net-dt": "^2.2.2",
+        "datatables.net-fixedcolumns": "^5.0.4",
+        "datatables.net-fixedheader": "^4.0.1",
+        "datatables.net-responsive-dt": "^3.0.4",
+        "fast-glob": "^3.3.3",
+        "jquery": "^3.7.1",
+        "jquery-ui": "^1.14.1",
+        "jszip": "^3.10.1",
+        "lodash": "^4.17.21",
+        "pdfmake": "^0.2.18",
+        "preline": "^3.0.1",
+        "select2": "^4.1.0-rc.0",
+        "toastify-js": "^1.12.0",
+        "vanilla-calendar": "^1.0.30",
+        "vanilla-calendar-pro": "^3.0.3"
+    }
+}
