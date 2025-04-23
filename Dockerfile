@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libxml2-dev \
     libpng-dev \
-    libpq-dev \         # untuk pdo_pgsql
+    libpq-dev \
     tesseract-ocr \
     && docker-php-ext-install \
         pdo \
