@@ -23,7 +23,7 @@ jobs:
 
     - name: Deploy via SSH
       run: |
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << EOF
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 <<'EOF'
           set -e
 
           cd ${{ vars.VPS_DOCKER_PATH }}
