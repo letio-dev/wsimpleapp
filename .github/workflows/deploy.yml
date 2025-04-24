@@ -31,7 +31,7 @@ jobs:
           echo "📥 Pulling latest code..."
           git pull origin main
 
-          echo "🔐 Generating .env.production..."
+          echo "🔧 Writing .env.production..."
           cat <<EOT > .env.production
             APP_NAME=${{ vars.APP_NAME }}
             APP_ENV=${{ vars.APP_ENV }}
@@ -73,6 +73,9 @@ jobs:
             VITE_APP_NAME=${{ vars.VITE_APP_NAME }}
             VITE_APP_URL=${{ vars.VITE_APP_URL }}
           EOT
+
+          echo "✅ Copying .env.production to .env"
+          cp .env.production .env
 
           echo "📦 Rebuilding and restarting Docker..."
           docker compose down
