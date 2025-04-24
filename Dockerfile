@@ -36,8 +36,7 @@ COPY . .
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress --no-suggest
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage /var/www/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 9000
 CMD ["php-fpm"]
