@@ -33,46 +33,46 @@ jobs:
 
           echo "🔧 Writing .env.production..."
           cat > .env.production <<EOT
-              APP_NAME=${{ vars.APP_NAME }}
-              APP_ENV=${{ vars.APP_ENV }}
-              APP_KEY=${{ secrets.APP_KEY }}
-              APP_DEBUG=${{ vars.APP_DEBUG }}
-              APP_URL=${{ vars.APP_URL }}
+APP_NAME=${{ vars.APP_NAME }}
+APP_ENV=${{ vars.APP_ENV }}
+APP_KEY=${{ secrets.APP_KEY }}
+APP_DEBUG=${{ vars.APP_DEBUG }}
+APP_URL=${{ vars.APP_URL }}
 
-              APP_LOCALE=${{ vars.APP_LOCALE }}
-              APP_FALLBACK_LOCALE=${{ vars.APP_FALLBACK_LOCALE }}
-              APP_FAKER_LOCALE=${{ vars.APP_FAKER_LOCALE }}
-              APP_TIMEZONE=${{ vars.APP_TIMEZONE }}
+APP_LOCALE=${{ vars.APP_LOCALE }}
+APP_FALLBACK_LOCALE=${{ vars.APP_FALLBACK_LOCALE }}
+APP_FAKER_LOCALE=${{ vars.APP_FAKER_LOCALE }}
+APP_TIMEZONE=${{ vars.APP_TIMEZONE }}
 
-              APP_MAINTENANCE_DRIVER=${{ vars.APP_MAINTENANCE_DRIVER }}
+APP_MAINTENANCE_DRIVER=${{ vars.APP_MAINTENANCE_DRIVER }}
 
-              PHP_CLI_SERVER_WORKERS=${{ vars.PHP_CLI_SERVER_WORKERS }}
+PHP_CLI_SERVER_WORKERS=${{ vars.PHP_CLI_SERVER_WORKERS }}
 
-              BCRYPT_ROUNDS=${{ vars.BCRYPT_ROUNDS }}
+BCRYPT_ROUNDS=${{ vars.BCRYPT_ROUNDS }}
 
-              LOG_CHANNEL=${{ vars.LOG_CHANNEL }}
-              LOG_STACK=${{ vars.LOG_STACK }}
-              LOG_DEPRECATIONS_CHANNEL=${{ vars.LOG_DEPRECATIONS_CHANNEL }}
-              LOG_LEVEL=${{ vars.LOG_LEVEL }}
+LOG_CHANNEL=${{ vars.LOG_CHANNEL }}
+LOG_STACK=${{ vars.LOG_STACK }}
+LOG_DEPRECATIONS_CHANNEL=${{ vars.LOG_DEPRECATIONS_CHANNEL }}
+LOG_LEVEL=${{ vars.LOG_LEVEL }}
 
-              DB_CONNECTION=${{ vars.DB_CONNECTION }}
-              DB_HOST=${{ secrets.DB_HOST }}
-              DB_PORT=${{ secrets.DB_PORT }}
-              DB_DATABASE=${{ secrets.DB_DATABASE }}
-              DB_USERNAME=${{ secrets.DB_USERNAME }}
-              DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+DB_CONNECTION=${{ vars.DB_CONNECTION }}
+DB_HOST=${{ secrets.DB_HOST }}
+DB_PORT=${{ secrets.DB_PORT }}
+DB_DATABASE=${{ secrets.DB_DATABASE }}
+DB_USERNAME=${{ secrets.DB_USERNAME }}
+DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
-              SESSION_DRIVER=${{ vars.SESSION_DRIVER }}
-              SESSION_LIFETIME=${{ vars.SESSION_LIFETIME }}
-              SESSION_ENCRYPT=${{ vars.SESSION_ENCRYPT }}
-              SESSION_PATH=${{ vars.SESSION_PATH }}
-              SESSION_DOMAIN=${{ vars.SESSION_DOMAIN }}
+SESSION_DRIVER=${{ vars.SESSION_DRIVER }}
+SESSION_LIFETIME=${{ vars.SESSION_LIFETIME }}
+SESSION_ENCRYPT=${{ vars.SESSION_ENCRYPT }}
+SESSION_PATH=${{ vars.SESSION_PATH }}
+SESSION_DOMAIN=${{ vars.SESSION_DOMAIN }}
 
-              HASH_DRIVER=${{ vars.HASH_DRIVER }}
+HASH_DRIVER=${{ vars.HASH_DRIVER }}
 
-              VITE_APP_NAME=wsimpleapp
-              VITE_APP_URL=http://wsimpleapp.icatchu.id
-            EOT
+VITE_APP_NAME=wsimpleapp
+VITE_APP_URL=http://wsimpleapp.icatchu.id
+EOT
 
           echo "📦 Rebuilding and restarting Docker..."
           docker compose down
