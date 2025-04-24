@@ -52,8 +52,8 @@ jobs:
 
         HASH_DRIVER=${{ vars.HASH_DRIVER }}
 
-        VITE_APP_NAME=${{ vars.VITE_APP_NAME }}
-        VITE_APP_URL=${{ vars.VITE_APP_URL }}
+        VITE_APP_NAME="${VITE_APP_NAME}"
+        VITE_APP_URL="${VITE_APP_URL}"
         EOF
 
     - name: Set up SSH
