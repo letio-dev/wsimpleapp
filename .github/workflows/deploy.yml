@@ -70,8 +70,8 @@ jobs:
 
           HASH_DRIVER=${{ vars.HASH_DRIVER }}
 
-          VITE_APP_NAME="${APP_NAME}"
-          VITE_APP_URL="${APP_URL}"
+          VITE_APP_NAME=wsimpleapp
+          VITE_APP_URL=http://wsimpleapp.icatchu.id
           EOT
 
           echo "📦 Rebuilding and restarting Docker..."
