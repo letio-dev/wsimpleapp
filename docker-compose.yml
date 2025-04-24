@@ -3,16 +3,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel-app
+    container_name: wsimpleapp
     volumes:
       - .:/var/www
     ports:
       - "9000:9000"
     networks:
-      - laravel
-    extra_hosts:
-      - "host.docker.internal:host-gateway" # optional, kalau mau akses host db
+      - nginx-net
 
 networks:
-  laravel:
+  nginx-net:
     driver: bridge
