@@ -33,7 +33,7 @@ WORKDIR /var/www
 COPY . .
 
 # Install composer dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress --no-suggest
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
