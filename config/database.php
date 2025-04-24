@@ -58,7 +58,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                defined('PDO::MYSQL_ATTR_INIT_COMMAND') ? PDO::MYSQL_ATTR_INIT_COMMAND : null => 'SET NAMES utf8mb4',
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
@@ -77,9 +77,9 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => [
+            'options' => defined('PDO::MYSQL_ATTR_INIT_COMMAND') ? [
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET collation_connection = 'utf8mb4_unicode_ci'",
-            ],
+            ] : [],
         ],
 
         'pgsql' => [
