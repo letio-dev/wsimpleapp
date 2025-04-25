@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: wsimpleapp
     volumes:
-      - storage_data:/var/www/storage
+      - ~/docker/volumes/storage:/var/www/storage
     restart: unless-stopped
     ports:
       - "9000"
