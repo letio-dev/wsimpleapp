@@ -5,9 +5,10 @@ services:
       dockerfile: Dockerfile
     container_name: wsimpleapp
     volumes:
-      - .:/var/www
+      - storage_data:/var/www/storage
+    restart: unless-stopped
     ports:
-      - "9000:9000"
+      - "9000"
     networks:
       - nginx-net
 
