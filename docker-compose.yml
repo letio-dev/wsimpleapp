@@ -7,7 +7,7 @@ services:
     volumes:
       - ~/docker/volumes/wsimpleapp/storage:/var/www/storage
     restart: unless-stopped
-    port:
+    ports:
       - "9000:9000"
     networks:
       - nginx-net
