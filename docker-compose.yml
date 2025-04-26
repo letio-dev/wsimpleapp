@@ -1,11 +1,11 @@
 services:
-  app:
+  wsimpleapp:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: wsimpleapp
     volumes:
-      - ~/docker/volumes/storage:/var/www/storage
+      - ~/docker/volumes/wsimpleapp/storage:/var/www/storage
     restart: unless-stopped
     ports:
       - "9000"
