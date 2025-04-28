@@ -75,7 +75,7 @@ jobs:
           #   fi
           # EOF
 
-          scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/dev/.env.{{ vars.APP_NAME }}
+          scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/dev/.env.${{ vars.APP_NAME }}
 
       - name: Deploy via SSH
         run: |
