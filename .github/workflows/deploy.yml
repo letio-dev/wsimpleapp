@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create .env.{{ vars.APP_NAME }} file
+      - name: Create .env.production file
         run: |
           cat > .env.${{ vars.APP_NAME }} <<EOF
           APP_NAME=${{ vars.APP_NAME }}
@@ -63,7 +63,7 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Upload .env.{{ vars.APP_NAME }} to VPS
+      - name: Upload .env.production to VPS
         run: |
           # ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
           #   set -e
@@ -75,7 +75,7 @@ jobs:
           #   fi
           # EOF
 
-          scp -i ~/.ssh/id_ed25519 .env.{{ vars.APP_NAME }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/dev/.env.{{ vars.APP_NAME }}
+          scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/dev/.env.{{ vars.APP_NAME }}
 
       - name: Deploy via SSH
         run: |
