@@ -16,7 +16,7 @@ jobs:
 
       - name: Create .env.production file
         run: |
-          cat > .env.${{ vars.APP_NAME }} <<EOF
+          cat > .env.production <<EOF
           APP_NAME=${{ vars.APP_NAME }}
           APP_ENV=${{ vars.APP_ENV }}
           APP_KEY=${{ secrets.APP_KEY }}
