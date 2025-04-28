@@ -148,11 +148,11 @@ jobs:
 
             # Kosongkan dulu folder tujuan
             echo "Deleting old files in S3 bucket path (${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build)..."
-            aws --endpoint-url="$ENDPOINT" s3 rm "s3://${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build" --recursive
+            aws --endpoint-url="${{ vars.S3_ENDPOINT }}" s3 rm "s3://${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build" --recursive
 
             # Upload semua file
             echo "Uploading files to S3..."
-            aws --endpoint-url="$ENDPOINT" s3 cp "/var/www/public/build" "s3://${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build/" --recursive --acl public-read
+            aws --endpoint-url="${{ vars.S3_ENDPOINT }}" s3 cp "/var/www/public/build" "s3://${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build/" --recursive --acl public-read
 
             # Buat file CORS policy
             echo "Creating CORS file..."
@@ -172,7 +172,7 @@ jobs:
 
             # Set CORS ke bucket
             echo "Setting CORS configuration..."
-            aws --endpoint-url="$ENDPOINT" s3api put-bucket-cors --bucket "${{ vars.S3_BUCKET }}" --cors-configuration file:///tmp/cors.json
+            aws --endpoint-url="${{ vars.S3_ENDPOINT }}" s3api put-bucket-cors --bucket "${{ vars.S3_BUCKET }}" --cors-configuration file:///tmp/cors.json
 
             # Bersihkan file sementara
             rm -f /tmp/cors.json
