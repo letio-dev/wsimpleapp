@@ -131,7 +131,7 @@ jobs:
 
             # Run migrations with error handling
             echo "🛠 Running migrations..."
-            docker compose exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
+            docker compose exec wsimpleapp php artisan migrate --force
 
             echo "Copying assets to S3..."
             docker compose exec wsimpleapp bash <<'OUTER_EOF'

@@ -23,12 +23,12 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-d
 # ---------------------------------
 # STAGE 2: Build Frontend with Vite
 # ---------------------------------
-FROM node:22-alpine AS vite-builder
+FROM oven/bun:latest AS vite-builder
 
 WORKDIR /app
 COPY . .
 
-RUN npm install && npm run build
+RUN bun install && bun run build
 
 # ---------------------------------
 # STAGE 3: Production PHP-FPM Image
@@ -45,7 +45,7 @@ WORKDIR /var/www
 COPY --from=php-builder /var/www /var/www
 COPY --from=vite-builder /app/public/build /var/www/public/build
 
-RUN chown -R www-data:www-data /var/www \
+RUN chown -R www-data:www-data /var/www/storage \
     && chmod -R ug+w /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 9000
