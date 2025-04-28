@@ -71,18 +71,44 @@ jobs:
       run: |
         ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
           set -e
+          
+          # Navigate to the Docker project directory
           cd ${{ vars.VPS_DOCKER_PATH }}
 
+          # Pull the latest changes from the repository
           echo "📥 Pulling latest code..."
-          git pull origin main
+          git pull origin main || { echo "Error: Failed to pull the latest code."; exit 1; }
 
+          # Check if the .env.production file exists before copying
           echo "✅ Copying .env.production to .env"
-          cp .env.production .env
+          if [ -f .env.production ]; then
+            cp .env.production .env
+          else
+            echo "Error: .env.production not found. Aborting."; exit 1;
+          fi
 
+          # Check if the target directory exists, and create it if not
+          echo "Checking if target directory exists..."
+          if [ ! -d "/home/dev/docker/volumes/${{ vars.APP_NAME }}" ]; then
+            echo "Target directory does not exist. Creating it..."
+            mkdir -p /home/dev/docker/volumes/${{ vars.APP_NAME }} || { echo "Error: Failed to create target directory."; exit 1; }
+          fi
+
+          # Check if the storage directory exists before moving it
+          echo "Moving storage directory..."
+          if [ -d "${{ vars.VPS_DOCKER_PATH }}/storage" ]; then
+            mv ${{ vars.VPS_DOCKER_PATH }}/storage /home/dev/docker/volumes/${{ vars.APP_NAME }}
+          else
+            echo "Error: storage directory does not exist. Aborting."; exit 1;
+          fi
+
+          # Rebuild and restart Docker services
           echo "📦 Rebuilding and restarting Docker..."
-          docker compose down
-          docker compose up -d --build
+          docker compose down || { echo "Error: Failed to bring Docker services down."; exit 1; }
+          docker compose up -d --build || { echo "Error: Failed to bring Docker services up."; exit 1; }
 
+          # Run migrations with error handling
           echo "🛠 Running migrations..."
-          docker compose exec wsimpleapp php artisan migrate --force
+          docker compose exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
+
         EOF
