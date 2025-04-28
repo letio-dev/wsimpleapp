@@ -105,7 +105,7 @@ jobs:
 
             # scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
             echo "✅ .env.production copied to Project."
-            mv /home/dev/${{ vars.APP_NAME }}.env ${{ vars.VPS_DOCKER_PATH }}/.env.production
+            # mv /home/dev/${{ vars.APP_NAME }}.env ${{ vars.VPS_DOCKER_PATH }}/.env.production
 
             # Check if the .env.production file exists before copying
             echo "✅ Copying .env.production to .env"
