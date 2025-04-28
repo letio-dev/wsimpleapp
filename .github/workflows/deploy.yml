@@ -11,125 +11,132 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Create .env.production file
-      run: |
-        cat > .env.${{ vars.APP_NAME }} <<EOF
-        APP_NAME=${{ vars.APP_NAME }}
-        APP_ENV=${{ vars.APP_ENV }}
-        APP_KEY=${{ secrets.APP_KEY }}
-        APP_DEBUG=${{ vars.APP_DEBUG }}
-        APP_URL=${{ vars.APP_URL }}
+      - name: Create .env.production file
+        run: |
+          cat > .env.${{ vars.APP_NAME }} <<EOF
+          APP_NAME=${{ vars.APP_NAME }}
+          APP_ENV=${{ vars.APP_ENV }}
+          APP_KEY=${{ secrets.APP_KEY }}
+          APP_DEBUG=${{ vars.APP_DEBUG }}
+          APP_URL=${{ vars.APP_URL }}
 
-        APP_LOCALE=${{ vars.APP_LOCALE }}
-        APP_FALLBACK_LOCALE=${{ vars.APP_FALLBACK_LOCALE }}
-        APP_FAKER_LOCALE=${{ vars.APP_FAKER_LOCALE }}
-        APP_TIMEZONE=${{ vars.APP_TIMEZONE }}
+          APP_LOCALE=${{ vars.APP_LOCALE }}
+          APP_FALLBACK_LOCALE=${{ vars.APP_FALLBACK_LOCALE }}
+          APP_FAKER_LOCALE=${{ vars.APP_FAKER_LOCALE }}
+          APP_TIMEZONE=${{ vars.APP_TIMEZONE }}
 
-        APP_MAINTENANCE_DRIVER=${{ vars.APP_MAINTENANCE_DRIVER }}
-        PHP_CLI_SERVER_WORKERS=${{ vars.PHP_CLI_SERVER_WORKERS }}
-        BCRYPT_ROUNDS=${{ vars.BCRYPT_ROUNDS }}
+          APP_MAINTENANCE_DRIVER=${{ vars.APP_MAINTENANCE_DRIVER }}
+          PHP_CLI_SERVER_WORKERS=${{ vars.PHP_CLI_SERVER_WORKERS }}
+          BCRYPT_ROUNDS=${{ vars.BCRYPT_ROUNDS }}
 
-        LOG_CHANNEL=${{ vars.LOG_CHANNEL }}
-        LOG_STACK=${{ vars.LOG_STACK }}
-        LOG_DEPRECATIONS_CHANNEL=${{ vars.LOG_DEPRECATIONS_CHANNEL }}
-        LOG_LEVEL=${{ vars.LOG_LEVEL }}
+          LOG_CHANNEL=${{ vars.LOG_CHANNEL }}
+          LOG_STACK=${{ vars.LOG_STACK }}
+          LOG_DEPRECATIONS_CHANNEL=${{ vars.LOG_DEPRECATIONS_CHANNEL }}
+          LOG_LEVEL=${{ vars.LOG_LEVEL }}
 
-        DB_CONNECTION=${{ vars.DB_CONNECTION }}
-        DB_HOST=${{ secrets.DB_HOST }}
-        DB_PORT=${{ secrets.DB_PORT }}
-        DB_DATABASE=${{ secrets.DB_DATABASE }}
-        DB_USERNAME=${{ secrets.DB_USERNAME }}
-        DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_CONNECTION=${{ vars.DB_CONNECTION }}
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_DATABASE=${{ secrets.DB_DATABASE }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
-        SESSION_DRIVER=${{ vars.SESSION_DRIVER }}
-        SESSION_LIFETIME=${{ vars.SESSION_LIFETIME }}
-        SESSION_ENCRYPT=${{ vars.SESSION_ENCRYPT }}
-        SESSION_PATH=${{ vars.SESSION_PATH }}
-        SESSION_DOMAIN=${{ vars.SESSION_DOMAIN }}
+          SESSION_DRIVER=${{ vars.SESSION_DRIVER }}
+          SESSION_LIFETIME=${{ vars.SESSION_LIFETIME }}
+          SESSION_ENCRYPT=${{ vars.SESSION_ENCRYPT }}
+          SESSION_PATH=${{ vars.SESSION_PATH }}
+          SESSION_DOMAIN=${{ vars.SESSION_DOMAIN }}
 
-        HASH_DRIVER=${{ vars.HASH_DRIVER }}
+          HASH_DRIVER=${{ vars.HASH_DRIVER }}
 
-        VITE_APP_NAME="${VITE_APP_NAME}"
-        VITE_APP_URL="${VITE_APP_URL}"
-        EOF
+          VITE_APP_NAME="${VITE_APP_NAME}"
+          VITE_APP_URL="${VITE_APP_URL}"
+          EOF
 
-    - name: Set up SSH
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    # - name: Upload .env.production to VPS
-    #   run: |
-    #     ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
-    #       set -e
-    #       # Check if the target directory exists, and create it if not
-    #       echo "Checking if target directory exists..."
-    #       if [ ! -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
-    #         echo "Target directory does not exist. Creating it..."
-    #         mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create target directory."; exit 1; }
-    #       fi
-    #     EOF
+      # - name: Upload .env.production to VPS
+      #   run: |
+      #     ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
+      #       set -e
+      #       # Check if the target directory exists, and create it if not
+      #       echo "Checking if target directory exists..."
+      #       if [ ! -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
+      #         echo "Target directory does not exist. Creating it..."
+      #         mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create target directory."; exit 1; }
+      #       fi
+      #     EOF
 
-    #     scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
+      #     scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
 
-    - name: Deploy via SSH
-      run: |
-        ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
-          set -e
-          
-          # Navigate to the Docker project directory
-          cd ${{ vars.VPS_DOCKER_PATH }}
+      - name: Deploy via SSH
+        run: |
+          ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
+            set -e
+            
+            # Check if the Docker project directory exists, and create it if not
+            echo "📂 Checking if Docker project directory exists..."
+            if [ ! -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
+              echo "Docker project directory does not exist. Creating it..."
+              mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create Docker project directory."; exit 1; }
+            fi
+            
+            # Navigate to the Docker project directory
+            cd ${{ vars.VPS_DOCKER_PATH }}
 
-          # Check if the current directory is a Git repository
-          echo "📥 Checking if directory is a Git repository..."
-          if [ ! -d ".git" ]; then
-            echo "No Git repository found. Cloning repository..."
-            git clone git@github.com:letio-dev/wsimpleapp.git . || { echo "Error: Failed to clone repository."; exit 1; }
-          fi
+            # Check if the current directory is a Git repository
+            echo "📥 Checking if directory is a Git repository..."
+            if [ ! -d ".git" ]; then
+              echo "No Git repository found. Cloning repository..."
+              git clone git@github.com:letio-dev/wsimpleapp.git . || { echo "Error: Failed to clone repository."; exit 1; }
+            fi
 
-          # Pull the latest changes from the repository
-          echo "📥 Pulling latest code..."
-          git pull origin main || { echo "Error: Failed to pull the latest code."; exit 1; }
+            # Pull the latest changes from the repository
+            echo "📥 Pulling latest code..."
+            git pull origin main || { echo "Error: Failed to pull the latest code."; exit 1; }
 
-          # scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
-          echo "✅ .env.production copied to Project."
-          mv /home/dev/.env.${{ vars.APP_NAME }} ${{ vars.VPS_DOCKER_PATH }}/.env.production
+            # scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
+            echo "✅ .env.production copied to Project."
+            mv /home/dev/.env.${{ vars.APP_NAME }} ${{ vars.VPS_DOCKER_PATH }}/.env.production
 
-          # Check if the .env.production file exists before copying
-          echo "✅ Copying .env.production to .env"
-          if [ -f .env.production ]; then
-            cp .env.production .env
-          else
-            echo "Error: .env.production not found. Aborting."; exit 1;
-          fi
+            # Check if the .env.production file exists before copying
+            echo "✅ Copying .env.production to .env"
+            if [ -f .env.production ]; then
+              cp .env.production .env
+            else
+              echo "Error: .env.production not found. Aborting."; exit 1;
+            fi
 
-          # Check if the target directory exists, and create it if not
-          echo "Checking if target directory exists..."
-          if [ ! -d "/home/dev/docker/volumes/${{ vars.APP_NAME }}" ]; then
-            echo "Target directory does not exist. Creating it..."
-            mkdir -p /home/dev/docker/volumes/${{ vars.APP_NAME }} || { echo "Error: Failed to create target directory."; exit 1; }
-          fi
+            # Check if the target directory exists, and create it if not
+            echo "Checking if target directory exists..."
+            if [ ! -d "/home/dev/docker/volumes/${{ vars.APP_NAME }}" ]; then
+              echo "Target directory does not exist. Creating it..."
+              mkdir -p /home/dev/docker/volumes/${{ vars.APP_NAME }} || { echo "Error: Failed to create target directory."; exit 1; }
+            fi
 
-          # Check if the storage directory exists before moving it
-          echo "Moving storage directory..."
-          if [ -d "${{ vars.VPS_DOCKER_PATH }}/storage" ]; then
-            mv ${{ vars.VPS_DOCKER_PATH }}/storage /home/dev/docker/volumes/${{ vars.APP_NAME }}
-          else
-            echo "Error: storage directory does not exist. Aborting."; exit 1;
-          fi
+            # Check if the storage directory exists before moving it
+            echo "Moving storage directory..."
+            if [ -d "${{ vars.VPS_DOCKER_PATH }}/storage" ]; then
+              mv ${{ vars.VPS_DOCKER_PATH }}/storage /home/dev/docker/volumes/${{ vars.APP_NAME }}
+            else
+              echo "Error: storage directory does not exist. Aborting."; exit 1;
+            fi
 
-          # Rebuild and restart Docker services
-          echo "📦 Rebuilding and restarting Docker..."
-          docker compose down || { echo "Error: Failed to bring Docker services down."; exit 1; }
-          docker compose up -d --build || { echo "Error: Failed to bring Docker services up."; exit 1; }
+            # Rebuild and restart Docker services
+            echo "📦 Rebuilding and restarting Docker..."
+            docker compose down || { echo "Error: Failed to bring Docker services down."; exit 1; }
+            docker compose up -d --build || { echo "Error: Failed to bring Docker services up."; exit 1; }
 
-          # Run migrations with error handling
-          echo "🛠 Running migrations..."
-          docker compose exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
+            # Run migrations with error handling
+            echo "🛠 Running migrations..."
+            docker compose exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
 
-        EOF
+          EOF
