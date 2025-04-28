@@ -84,10 +84,13 @@ jobs:
             
             # Check if the Docker project directory exists, and create it if not
             echo "📂 Checking if Docker project directory exists..."
-            if [ ! -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
-              echo "Docker project directory does not exist. Creating it..."
-              mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create Docker project directory."; exit 1; }
+            if [ -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
+              echo "Docker project directory exists. Deleting it..."
+              rm -rf ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to delete Docker project directory."; exit 1; }
             fi
+
+            echo "Creating Docker project directory..."
+            mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create Docker project directory."; exit 1; }
             
             # Navigate to the Docker project directory
             cd ${{ vars.VPS_DOCKER_PATH }}
@@ -96,12 +99,12 @@ jobs:
             echo "📥 Checking if directory is a Git repository..."
             if [ ! -d ".git" ]; then
               echo "No Git repository found. Cloning repository..."
-              git clone git@github.com:letio-dev/wsimpleapp.git . || { echo "Error: Failed to clone repository."; exit 1; }
+              git clone --single-branch --branch main git@github.com:letio-dev/wsimpleapp.git . || { echo "Error: Failed to clone repository."; exit 1; }
             fi
 
-            # Pull the latest changes from the repository
-            echo "📥 Pulling latest code..."
-            git pull origin main || { echo "Error: Failed to pull the latest code."; exit 1; }
+            # # Pull the latest changes from the repository
+            # echo "📥 Pulling latest code..."
+            # git pull origin main || { echo "Error: Failed to pull the latest code."; exit 1; }
 
             # scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
             echo "✅ .env.production copied to Project."
