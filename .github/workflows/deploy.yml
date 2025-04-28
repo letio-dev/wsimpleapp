@@ -188,4 +188,6 @@ jobs:
             echo "All done successfully!"
             OUTER_EOF
 
+            echo "✅ Finished deploying!"
+
           EOF
