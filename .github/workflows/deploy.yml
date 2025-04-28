@@ -164,7 +164,7 @@ jobs:
 
               # Buat file CORS policy
               echo "Creating CORS file..."
-              cat > /tmp/cors.json << 'INNER_INNER_EOF'
+              cat > /tmp/cors.json << 'CORS_EOF'
                 {
                   "CORSRules": [
                     {
@@ -176,7 +176,7 @@ jobs:
                     }
                   ]
                 }
-              INNER_INNER_EOF
+              CORS_EOF
 
               # Set CORS ke bucket
               echo "Setting CORS configuration..."
