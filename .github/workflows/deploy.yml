@@ -130,19 +130,11 @@ jobs:
             docker compose up -d --build || { echo "Error: Failed to bring Docker services up."; exit 1; }
 
             # Run migrations with error handling
-            # echo "🛠 Running migrations..."
-            # docker exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
+            echo "🛠 Running migrations..."
+            docker exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
 
             echo "Copying assets to S3..."
-            docker compose exec wsimpleapp bash <<INNER_EOF
-            # Konfigurasi
-            ACCESS_KEY="${{ secrets.S3_ACCESS_KEY }}"
-            SECRET_KEY="${{ secrets.S3_SECRET_KEY }}"
-            ENDPOINT="${{ vars.S3_ENDPOINT }}"
-            BUCKET="${{ vars.S3_BUCKET }}"
-            PREFIX="${{ vars.S3_PREFIX }}"
-            SOURCE_DIR="/var/www/public/build"
-
+            docker exec wsimpleapp bash <<INNER_EOF
             # Cek awscli
             if ! command -v aws &> /dev/null
             then
@@ -151,16 +143,16 @@ jobs:
             fi
 
             # Export credentials sementara
-            export AWS_ACCESS_KEY_ID="$ACCESS_KEY"
-            export AWS_SECRET_ACCESS_KEY="$SECRET_KEY"
+            export AWS_ACCESS_KEY_ID="${{ secrets.S3_ACCESS_KEY }}"
+            export AWS_SECRET_ACCESS_KEY="${{ secrets.S3_SECRET_KEY }}"
 
             # Kosongkan dulu folder tujuan
-            echo "Deleting old files in S3 bucket path ($BUCKET/$PREFIX/build)..."
-            aws --endpoint-url="$ENDPOINT" s3 rm "s3://$BUCKET/$PREFIX/build" --recursive
+            echo "Deleting old files in S3 bucket path (${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build)..."
+            aws --endpoint-url="$ENDPOINT" s3 rm "s3://${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build" --recursive
 
             # Upload semua file
             echo "Uploading files to S3..."
-            aws --endpoint-url="$ENDPOINT" s3 cp "$SOURCE_DIR" "s3://$BUCKET/$PREFIX/build/" --recursive --acl public-read
+            aws --endpoint-url="$ENDPOINT" s3 cp "/var/www/public/build" "s3://${{ vars.S3_BUCKET }}/${{ vars.S3_PREFIX }}/build/" --recursive --acl public-read
 
             # Buat file CORS policy
             echo "Creating CORS file..."
@@ -180,7 +172,7 @@ jobs:
 
             # Set CORS ke bucket
             echo "Setting CORS configuration..."
-            aws --endpoint-url="$ENDPOINT" s3api put-bucket-cors --bucket "$BUCKET" --cors-configuration file:///tmp/cors.json
+            aws --endpoint-url="$ENDPOINT" s3api put-bucket-cors --bucket "${{ vars.S3_BUCKET }}" --cors-configuration file:///tmp/cors.json
 
             # Bersihkan file sementara
             rm -f /tmp/cors.json
