@@ -123,14 +123,14 @@ jobs:
             if [ ! -d "/home/dev/docker/volumes/${{ vars.APP_NAME }}" ]; then
               echo "Target directory does not exist. Creating it..."
               mkdir -p /home/dev/docker/volumes/${{ vars.APP_NAME }} || { echo "Error: Failed to create target directory."; exit 1; }
-            fi
 
-            # Check if the storage directory exists before moving it
-            echo "Moving storage directory..."
-            if [ -d "${{ vars.VPS_DOCKER_PATH }}/storage" ]; then
-              mv ${{ vars.VPS_DOCKER_PATH }}/storage /home/dev/docker/volumes/${{ vars.APP_NAME }}
-            else
-              echo "Error: storage directory does not exist. Aborting."; exit 1;
+              # Check if the storage directory exists before moving it
+              echo "Moving storage directory..."
+              if [ -d "${{ vars.VPS_DOCKER_PATH }}/storage" ]; then
+                mv ${{ vars.VPS_DOCKER_PATH }}/storage /home/dev/docker/volumes/${{ vars.APP_NAME }}
+              else
+                echo "Error: storage directory does not exist. Aborting."; exit 1;
+              fi
             fi
 
             # Rebuild and restart Docker services
