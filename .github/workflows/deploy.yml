@@ -134,7 +134,7 @@ jobs:
             docker exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
 
             echo "Copying assets to S3..."
-            docker exec wsimpleapp bash <<INNER_EOF
+            docker compose exec wsimpleapp bash <<INNER_EOF
             # Cek awscli
             if ! command -v aws &> /dev/null
             then
