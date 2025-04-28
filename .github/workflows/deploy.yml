@@ -65,6 +65,16 @@ jobs:
 
     - name: Upload .env.production to VPS
       run: |
+        ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
+          set -e
+          # Check if the target directory exists, and create it if not
+          echo "Checking if target directory exists..."
+          if [ ! -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
+            echo "Target directory does not exist. Creating it..."
+            mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create target directory."; exit 1; }
+          fi
+        EOF
+
         scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
 
     - name: Deploy via SSH
