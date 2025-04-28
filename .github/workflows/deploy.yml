@@ -16,7 +16,7 @@ jobs:
 
     - name: Create .env.production file
       run: |
-        cat > .env.production <<EOF
+        cat > .env.${{ vars.APP_NAME }} <<EOF
         APP_NAME=${{ vars.APP_NAME }}
         APP_ENV=${{ vars.APP_ENV }}
         APP_KEY=${{ secrets.APP_KEY }}
@@ -63,19 +63,19 @@ jobs:
         chmod 600 ~/.ssh/id_ed25519
         ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Upload .env.production to VPS
-      run: |
-        ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
-          set -e
-          # Check if the target directory exists, and create it if not
-          echo "Checking if target directory exists..."
-          if [ ! -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
-            echo "Target directory does not exist. Creating it..."
-            mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create target directory."; exit 1; }
-          fi
-        EOF
+    # - name: Upload .env.production to VPS
+    #   run: |
+    #     ssh -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/id_ed25519 << 'EOF'
+    #       set -e
+    #       # Check if the target directory exists, and create it if not
+    #       echo "Checking if target directory exists..."
+    #       if [ ! -d "${{ vars.VPS_DOCKER_PATH }}" ]; then
+    #         echo "Target directory does not exist. Creating it..."
+    #         mkdir -p ${{ vars.VPS_DOCKER_PATH }} || { echo "Error: Failed to create target directory."; exit 1; }
+    #       fi
+    #     EOF
 
-        scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
+    #     scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
 
     - name: Deploy via SSH
       run: |
@@ -95,6 +95,10 @@ jobs:
           # Pull the latest changes from the repository
           echo "📥 Pulling latest code..."
           git pull origin main || { echo "Error: Failed to pull the latest code."; exit 1; }
+
+          # scp -i ~/.ssh/id_ed25519 .env.production ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.VPS_DOCKER_PATH }}/.env.production
+          echo "✅ .env.production copied to Project."
+          mv /home/dev/.env.${{ vars.APP_NAME }} ${{ vars.VPS_DOCKER_PATH }}/.env.production
 
           # Check if the .env.production file exists before copying
           echo "✅ Copying .env.production to .env"
