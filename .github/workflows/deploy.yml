@@ -130,8 +130,8 @@ jobs:
             docker compose up -d --build || { echo "Error: Failed to bring Docker services up."; exit 1; }
 
             # Run migrations with error handling
-            echo "🛠 Running migrations..."
-            docker exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
+            # echo "🛠 Running migrations..."
+            # docker exec wsimpleapp php artisan migrate --force || { echo "Error: Migrations failed."; exit 1; }
 
             echo "Copying assets to S3..."
             docker exec wsimpleapp bash <<INNER_EOF
